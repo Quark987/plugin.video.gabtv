@@ -30,18 +30,24 @@ def kodi_header():
 def scrape_search_results(query):
     page = session.get(BASE_URL+'/search?q'+urlencode({'':query}), headers=headers)
     soup = BeautifulSoup(page.content, 'html.parser')
-    results = soup.find('div', class_='uk-grid-small uk-flex-center').findChildren('div', recursive=False)
 
-    art_urls = []
-    video_urls = []
-    titles = []
+    try:
+        results = soup.find('div', class_='uk-grid-small uk-flex-center').findChildren('div', recursive=False)
 
-    for result in results:
-        art_urls.append(   BASE_URL + result.find('div', class_='studio-episode-thumbnail').find('img').get('src'))
-        video_urls.append( result.find('div').get('data-episode-url'))
-        titles.append(     result.find('div').get('title'))
-    
-    return __map_videos(titles, video_urls, art_urls)
+        art_urls = []
+        video_urls = []
+        titles = []
+
+        for result in results:
+            art_urls.append(   BASE_URL + result.find('div', class_='studio-episode-thumbnail').find('img').get('src'))
+            video_urls.append( result.find('div').get('data-episode-url'))
+            titles.append(     result.find('div').get('title'))
+        
+        return __map_videos(titles, video_urls, art_urls)
+
+    except:
+        ok_dialog('Error', 'No search results')
+        return []
 
 
 def scrape_explore_menu():

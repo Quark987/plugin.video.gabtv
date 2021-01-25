@@ -37,13 +37,13 @@ class GabTV(object):
 
     def show_explore_menu(self):
         video_items = webscraper.scrape_explore_menu()
-        # ok_dialog('art url', video_items[0].art_dict['thumb'])
         show_listing(video_items, category=30012, sort='label', content='videos')  # A-Z
     
 
     def show_search_results(self, query):
         video_items = webscraper.scrape_search_results(query)
-        show_listing(video_items, category=30014, sort='label', content='videos')
+        if len(video_items) > 0:
+            show_listing(video_items, category=30014, sort='label', content='videos')
 
 
     def show_category_menu(self, category=None):
